@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechShop - Boutique en ligne</title>
+    <style>
+      /* Reset CSS */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f5f5f5;
+        color: #333;
+      }
+
+      /* Header */
+      header {
+        background: #2c3e50;
+        color: white;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      nav ul {
+        display: flex;
+        list-style: none;
+      }
+
+      nav ul li {
+        margin-left: 1.5rem;
+      }
+
+      nav ul li a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .cart-icon {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .cart-count {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: #e74c3c;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.7rem;
+      }
+
+      /* Filtres */
+      .filters {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #ecf0f1;
+        margin-bottom: 2rem;
+      }
+
+      .filter-btn {
+        padding: 0.5rem 1rem;
+        background: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .filter-btn.active {
+        background: #2980b9;
+      }
+
+      /* Hero Section */
+      .hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+          url("https://via.placeholder.com/1920x600") center/cover;
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: white;
+        padding: 0 1rem;
+      }
+
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin-bottom: 2rem;
+      }
+
+      .btn {
+        background: #3498db;
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .btn:hover {
+        background: #2980b9;
+      }
+
+      /* Products Section */
+      .products {
+        padding: 3rem 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .section-title {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+      }
+
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+
+      .product-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .product-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .product-info {
+        padding: 1.5rem;
+      }
+
+      .product-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .product-price {
+        font-weight: bold;
+        color: #e74c3c;
+        margin-bottom: 1rem;
+      }
+
+      /* Cart Modal */
+      .cart-modal {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 400px;
+        height: 100%;
+        background: white;
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+        transition: right 0.3s;
+        z-index: 1000;
+        padding: 1.5rem;
+        overflow-y: auto;
+      }
+
+      .cart-modal.active {
+        right: 0;
+      }
+
+      .cart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .close-cart {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .cart-items {
+        margin-bottom: 2rem;
+      }
+
+      .cart-item {
+        display: flex;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 1rem;
+      }
+
+      .cart-item-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        margin-right: 1rem;
+      }
+
+      .cart-item-info {
+        flex: 1;
+      }
+
+      .cart-item-title {
+        font-weight: bold;
+      }
+
+      .cart-item-price {
+        color: #e74c3c;
+      }
+
+      .remove-item {
+        color: #e74c3c;
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+
+      .cart-total {
+        font-weight: bold;
+        font-size: 1.2rem;
+        text-align: right;
+        margin-bottom: 1.5rem;
+      }
+
+      .checkout-btn {
+        width: 100%;
+        padding: 1rem;
+        background: #2ecc71;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .checkout-btn:hover {
+        background: #27ae60;
+      }
+
+      /* Footer */
+      footer {
+        background: #2c3e50;
+        color: white;
+        text-align: center;
+        padding: 2rem 1rem;
+        margin-top: 3rem;
+      }
+
+      /* Payment Modal */
+      .payment-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+
+      .payment-modal.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .payment-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 500px;
+        text-align: center;
+      }
+
+      .payment-methods {
+        margin: 1.5rem 0;
+      }
+
+      .payment-method {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .payment-method.selected {
+        border-color: #3498db;
+        background: #f0f8ff;
+      }
+
+      .payment-method img {
+        width: 50px;
+        margin-right: 1rem;
+      }
+
+      .close-payment {
+        margin-top: 1rem;
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      @media (max-width: 768px) {
+        .cart-modal {
+          width: 100%;
+        }
+
+        .hero h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">TechShop</div>
+      <nav>
+        <ul>
+          <li><a href="#">Accueil</a></li>
+          <li><a href="#products">Produits</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="cart-icon" id="cart-icon">
+        🛒
+        <span class="cart-count" id="cart-count">0</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <h1>Bienvenue chez TechShop</h1>
+      <p>Découvrez nos derniers produits high-tech aux meilleurs prix</p>
+      <button class="btn">Voir les produits</button>
+    </section>
+
+    <section class="products" id="products">
+      <h2 class="section-title">Nos Produits</h2>
+      <div class="filters">
+        <button class="filter-btn active" data-category="all">Tous</button>
+        <button class="filter-btn" data-category="mobile">Mobile</button>
+        <button class="filter-btn" data-category="laptop">Ordinateurs</button>
+        <button class="filter-btn" data-category="accessory">
+          Accessoires
+        </button>
+      </div>
+      <div class="products-grid" id="products-grid"></div>
+    </section>
+
+    <div class="cart-modal" id="cart-modal">
+      <div class="cart-header">
+        <h2>Votre Panier</h2>
+        <button class="close-cart" id="close-cart">×</button>
+      </div>
+      <div class="cart-items" id="cart-items"></div>
+      <div class="cart-total" id="cart-total">Total: 0€</div>
+      <button class="checkout-btn">Passer la commande</button>
+    </div>
+
+    <div class="payment-modal" id="payment-modal">
+      <div class="payment-content">
+        <h2>Paiement Sécurisé</h2>
+        <p>Total à payer: <span id="payment-total">0</span>€</p>
+
+        <div class="payment-methods">
+          <div class="payment-method" data-method="card">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/196/196578.png"
+              alt="Carte"
+            />
+            <span>Carte Bancaire</span>
+          </div>
+          <div class="payment-method" data-method="paypal">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/174/174861.png"
+              alt="PayPal"
+            />
+            <span>PayPal</span>
+          </div>
+        </div>
+
+        <button class="btn" id="confirm-payment">Confirmer le paiement</button>
+        <button class="close-payment" id="close-payment">Annuler</button>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 TechShop. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+      // Données des produits
+      const products = [
+        {
+          id: 1,
+          name: "Smartphone X",
+          price: 699,
+          category: "mobile",
+          image: "https://via.placeholder.com/300x200?text=Smartphone+X",
+        },
+        {
+          id: 1,
+          name: "Smartphone X",
+          price: 699,
+          category: "mobile",
+          image: "https://via.placeholder.com/300x200?text=Smartphone+X",
+        },
+        {
+          id: 2,
+          name: "Ordinateur Portable Pro",
+          price: 1299,
+          category: "laptop",
+          image: "https://via.placeholder.com/300x200?text=Laptop+Pro",
+        },
+        {
+          id: 3,
+          name: "Casque Audio Sans Fil",
+          price: 199,
+          category: "accessory",
+          image: "https://via.placeholder.com/300x200?text=Casque+Audio",
+        },
+        {
+          id: 3,
+          name: "montre intelligente",
+          price: 199,
+          category: "accessory",
+          image: "https://via.placeholder.com/300x200?text=Casque+Audio",
+        },
+        {
+          id: 4,
+          name: "Montre Connectée",
+          price: 249,
+          category: "wearable",
+          image: "https://via.placeholder.com/300x200?text=Montre+Connectée",
+        },
+        {
+          id: 5,
+          name: "Enceinte Bluetooth",
+          price: 129,
+          category: "accessory",
+          image: "https://via.placeholder.com/300x200?text=Enceinte+BT",
+        },
+        {
+          id: 6,
+          name: "Clavier Mécanique",
+          price: 89,
+          category: "accessory",
+          image: "https://via.placeholder.com/300x200?text=Clavier+Méca",
+        },
+      ];
+
+      // Panier
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // Éléments DOM
+      const productsGrid = document.getElementById("products-grid");
+      const cartIcon = document.getElementById("cart-icon");
+      const cartModal = document.getElementById("cart-modal");
+      const closeCart = document.getElementById("close-cart");
+      const cartItems = document.getElementById("cart-items");
+      const cartTotal = document.getElementById("cart-total");
+      const cartCount = document.getElementById("cart-count");
+      const checkoutBtn = document.querySelector(".checkout-btn");
+      const paymentModal = document.getElementById("payment-modal");
+      const closePayment = document.getElementById("close-payment");
+      const confirmPayment = document.getElementById("confirm-payment");
+      const paymentTotal = document.getElementById("payment-total");
+      const filterButtons = document.querySelectorAll(".filter-btn");
+
+      // Afficher les produits
+      function displayProducts(category = "all") {
+        productsGrid.innerHTML = "";
+        const filteredProducts =
+          category === "all"
+            ? products
+            : products.filter((p) => p.category === category);
+
+        filteredProducts.forEach((product) => {
+          const productCard = document.createElement("div");
+          productCard.className = "product-card";
+          productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="product-img">
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-price">${product.price}€</p>
+                        <button class="btn add-to-cart" data-id="${product.id}">Ajouter au panier</button>
+                    </div>
+                `;
+          productsGrid.appendChild(productCard);
+        });
+
+        document.querySelectorAll(".add-to-cart").forEach((button) => {
+          button.addEventListener("click", addToCart);
+        });
+      }
+
+      // Gestion panier
+      function addToCart(e) {
+        const productId = parseInt(e.target.getAttribute("data-id"));
+        const product = products.find((p) => p.id === productId);
+        const existingItem = cart.find((item) => item.id === productId);
+
+        existingItem
+          ? existingItem.quantity++
+          : cart.push({ ...product, quantity: 1 });
+        updateCart();
+        saveCart();
+      }
+
+      function updateCart() {
+        cartCount.textContent = cart.reduce(
+          (total, item) => total + item.quantity,
+          0
+        );
+        cartItems.innerHTML = "";
+        let total = 0;
+
+        cart.forEach((item) => {
+          total += item.price * item.quantity;
+          const cartItem = document.createElement("div");
+          cartItem.className = "cart-item";
+          cartItem.innerHTML = `
+                    <img src="${item.image}" class="cart-item-img" alt="${item.name}">
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <p>${item.price}€ x ${item.quantity}</p>
+                        <p class="remove-item" data-id="${item.id}">Supprimer</p>
+                    </div>
+                `;
+          cartItems.appendChild(cartItem);
+        });
+
+        cartTotal.textContent = "Total: ${total}€"; // Correction clé ici
+        paymentTotal.textContent = total;
+
+        document.querySelectorAll(".remove-item").forEach((button) => {
+          button.addEventListener("click", removeFromCart);
+        });
+      }
+
+      function removeFromCart(e) {
+        const productId = parseInt(e.target.getAttribute("data-id"));
+        cart = cart.filter((item) => item.id !== productId);
+        updateCart();
+        saveCart();
+      }
+
+      function saveCart() {
+        localStorage.setItem("cart", JSON.stringify(cart));
+      }
+
+      // Filtres
+      filterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          filterButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          displayProducts(button.dataset.category);
+        });
+      });
+
+      // Paiement
+      checkoutBtn.addEventListener("click", () => {
+        if (cart.length === 0) return alert("Panier vide !");
+        cartModal.classList.remove("active");
+        paymentModal.classList.add("active");
+      });
+
+      closePayment.addEventListener("click", () => {
+        paymentModal.classList.remove("active");
+      });
+
+      document.querySelectorAll(".payment-method").forEach((method) => {
+        method.addEventListener("click", () => {
+          document
+            .querySelectorAll(".payment-method")
+            .forEach((m) => m.classList.remove("selected"));
+          method.classList.add("selected");
+        });
+      });
+
+      confirmPayment.addEventListener("click", () => {
+        const selectedMethod = document.querySelector(
+          ".payment-method.selected"
+        );
+        if (!selectedMethod) return alert("Choisissez un mode de paiement");
+
+        setTimeout(() => {
+          paymentModal.classList.remove("active");
+          alert(
+            `Paiement de ${paymentTotal.textContent}€ accepté via ${
+              selectedMethod.querySelector("span").textContent
+            }!`
+          );
+          cart = [];
+          updateCart();
+          saveCart();
+        }, 1500);
+      });
+
+      // Initialisation
+      displayProducts();
+      updateCart();
+      cartIcon.addEventListener("click", () =>
+        cartModal.classList.add("active")
+      );
+      closeCart.addEventListener("click", () =>
+        cartModal.classList.remove("active")
+      );
+    </script>
+  </body>
+</html>
